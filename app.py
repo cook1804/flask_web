@@ -1,5 +1,5 @@
 from flask import Flask ,  render_template
-
+from data import Articles
 
 app = Flask(__name__)
 
@@ -16,7 +16,9 @@ def about():
 
 @app.route('/articles')                                     
 def articles():
-    return render_template("articles.html",hello = "Gary Kim")  
+    articles = Articles()
+    # print(articles[0]['title'])
+    return render_template("articles.html",articles = articles)  
 
 if __name__ == '__main__':   # 여기서 부터 시작.
     app.run()
