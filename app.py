@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 app.debug = True  #오류 메세지를 보기위해 True 로 함. 디폴트는 False
 
-@app.route('/', methods=['GET']) # 데코레이터(@)
+@app.route('/' , methods=['GET']) # 데코레이터(@)    # method =['GET'] 이 디폴트 이다.
 def index():
     # return "Hello World"
-    return render_template("index.html", data="KIM")
+    return render_template("index.html", data="KIM")               # data, hello, articles, article 보다 = 다음이 중요하다.
 
 @app.route('/about')                                     
 def about():
@@ -18,7 +18,13 @@ def about():
 def articles():
     articles = Articles()
     # print(articles[0]['title'])
-    return render_template("articles.html",articles = articles)  
+    return render_template("articles.html",articles = articles)
 
+@app.route('/article/<int:id>')
+def article(id):
+    articles = Articles()
+    article = articles[id-1]
+    print(articles[id-1])
+    return render_template("article.html",article = article)
 if __name__ == '__main__':   # 여기서 부터 시작.
     app.run()
