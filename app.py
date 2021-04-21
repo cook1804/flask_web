@@ -1,7 +1,7 @@
 from flask import Flask ,  render_template, request ,redirect
 from data import Articles
 import pymysql
-
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 
@@ -110,7 +110,7 @@ def register():
         name = request.form['name']
         email = request.form['email']
         username = request.form['username']
-        password = request.form['password']
+        password = sha256_crypt.encrypt(request.form['password'])
         sql = "INSERT INTO `busan`.`users` (`name`, `email`, `username`, `password`) VALUES (%s, %s, %s, %s);"
         input_data = [name,email,username,password]
         cursor.execute(sql,input_data)
@@ -122,6 +122,20 @@ def register():
         return redirect("/articles")
     else:    
         return render_template("register.html")
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == "POST":
+        email = request.form['email']
+        password_1 = request.form['password']
+        cursor = db.cursor()
+        sql = 'SELECT password FROM users WHERE email = "cook1804@gmail.com"'
+        cursor.execute(sql)
+        password = cursor.fetchone()
+        print(password)
+        return "Success"
+        # if sha256_crypt.verify("1234",)
+
 
 
 if __name__ == '__main__':   # 여기서 부터 시작.
