@@ -103,39 +103,38 @@ def edit(id):
         # print(topic)
         return render_template("edit_article.html", article = topic)
 
-@app.route('/register',methods =['GET','POST'])
+@app.route('/register' , methods = ['GET', 'POST'])
 def register():
-    cursor = db.cursor()
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        username = request.form['username']
-        password = sha256_crypt.encrypt(request.form['password'])
-        sql = "INSERT INTO `busan`.`users` (`name`, `email`, `username`, `password`) VALUES (%s, %s, %s, %s);"
-        input_data = [name,email,username,password]
-        cursor.execute(sql,input_data)
-        db.commit()
-        
-        if not(name and email and username and password):
-            return "입력되지 않은 정보가 있습니다."
-            
-        return redirect("/articles")
-    else:    
-        return render_template("register.html")
+  cursor  = db.cursor()
+  if request.method == "POST":
+    name = request.form['name']
+    email = request.form['email']
+    username = request.form['username']
+    userpw = sha256_crypt.encrypt(request.form['userpw'])
+    sql = "INSERT INTO users (name, email , username, password) VALUES (%s,%s,%s,%s)"
+    input_data = [name ,email , username ,userpw  ]
+    cursor.execute(sql ,input_data)
+    db.commit()
+    return redirect('/articles')
+  else:
+    return render_template("register.html")
+
 
 @app.route('/login', methods=['GET','POST'])
 def login():
+    cursor = db.cursor()
     if request.method == "POST":
-        email = request.form['email']
-        password_1 = request.form['password']
-        cursor = db.cursor()
-        sql = 'SELECT password FROM users WHERE email = "cook1804@gmail.com"'
-        cursor.execute(sql)
-        password = cursor.fetchone()
-        print(password)
-        return "Success"
-        # if sha256_crypt.verify("1234",)
-
+        username = request.form['username']
+        userpw_1 = request.form['userpw']
+        sql = 'SELECT password FROM users WHERE email = %s;'
+        input_data = [username]
+        cursor.execute(sql,input_data)
+        userpw = cursor.fetchone()
+        print(userpw[0])
+        if sha256_crypt.verify(userpw_1, userpw[0]):
+            return "Success"
+    else:
+      return userpw[0]
 
 
 if __name__ == '__main__':   # 여기서 부터 시작.
