@@ -116,6 +116,8 @@ def register():
         cursor.execute(sql,input_data)
         db.commit()
         
+        if not(name and email and username and password):
+            return "입력되지 않은 정보가 있습니다."
         return redirect("/articles")
     else:    
         return render_template("register.html")
