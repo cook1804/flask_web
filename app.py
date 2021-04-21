@@ -86,14 +86,22 @@ def delete(id):
 def edit(id):
     cursor = db.cursor()
     if request.method =='POST':
-        return "Success"
+        title = request.form['title']
+        desc = request.form['desc']
+        sql = "UPDATE `topic` SET `title` = %s, `body` = %s WHERE (`id` = {});".format(id)
+        
+        input_data = [title, desc]
+        cursor.execute(sql,input_data)
+        db.commit()
+        return redirect("/articles")
     
     else:
         sql = "SELECT * FROM topic WHERE id = {};".format(id)    
         cursor.execute(sql)
         topic = cursor.fetchone()
-        print(topic)
+        # print(topic)
         return render_template("edit_article.html", article = topic)
+
 
 
 
